@@ -61,22 +61,25 @@ class TransportMeas(Procedure):
     tempset = FloatParameter('Temperature Set Point', units='K', default=300.)
     tempramp = FloatParameter('Temperature Ramp Rate', units='K/min', default=3.)
     maxfield = FloatParameter('Maximum Field', units='Oe', default=0.)
-    fieldramp = FloatParameter('Magnetic Field Ramp Rate', units='Oe/min', default=100.)
+    fieldramp = FloatParameter('Magnetic Field Ramp Rate', units='Oe/min', default=60.)
     hysteresis = BooleanParameter('Do we expect a hysteresis in B', default = False)
     pinconfig = Parameter('Pin Configuration', default='2vdP')
 
     #DATA_COLUMNS = ['Time', 'Temperature', '\g(m)\-(0)H', 'R vdp 1', \
     #                'R vdp 2', 'R Hall 1', 'R Hall 2'] # Had to have something
-    #                                                   # here with no logic in order 
+                                                       # here with no logic in order 
                                                        # for MainWindow def__init__ 
                                                        # line to work
 
     DATA_COLUMNS = ['Time', 'Temperature', '\g(m)\-(0)H', 'R vdp 1', \
                     'R vdp 2', 'R Hall 1', 'R Hall 2', 'R vdp 12', \
-                    'R vdp 22', 'R Hall 12', 'R Hall 22']
+                   'R vdp 22', 'R Hall 12', 'R Hall 22']
 
     #DATA_COLUMNS = ['Time', 'Temperature', '\g(m)\-(0)H', 'R vdp 1', \
     #               'R bridge 2', 'R long 2', 'R hall 2']
+
+    #DATA_COLUMNS = ['Time', 'Temperature', '\g(m)\-(0)H', 'R vdp 1', \
+    #                'R vdp 2', 'R Hall 1', 'R Hall 2']
 
 
     # Check if these work at all to change the Data Columns
@@ -135,11 +138,11 @@ class TransportMeas(Procedure):
 
 
     def startup(self):
-    """
-    This method controls the device startup that occurs for every new sweep
-    the user runs. This method connects to the voltmeter and switch matrix
-    and initializes and arms the current source for specific measurement.
-    """
+        """
+        This method controls the device startup that occurs for every new sweep
+        the user runs. This method connects to the voltmeter and switch matrix
+        and initializes and arms the current source for specific measurement.
+        """
         print('Starting Up')
         KE6221adapter = VISAAdapter("GPIB0::12")
         KE7001adapter = VISAAdapter("GPIB0::7")
@@ -170,7 +173,7 @@ class TransportMeas(Procedure):
         self.switch.set_pins(1,3,4,2) #1,3,4,2 Jieun wiring; 1243 Neil wiring
         self.switch.set_pins2(5,9,8,6) #1,3,4,2 # 7 -> 9 b/c 7 is bad at SM
         if self.pinconfig == '1vdP':
-             configs = ['vdp1', 'vdp2', 'Hall1', 'Hall2']
+             configs = ['vdp1', 'vdp2', 'Hall1', 'Hall2'] #added extra 2s for Zach L
         if self.pinconfig == '2vdP':
             configs = ['vdp1', 'vdp2', 'Hall1', 'Hall2', \
                        'vdp12', 'vdp22', 'Hall12', 'Hall22']

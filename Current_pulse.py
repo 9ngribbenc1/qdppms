@@ -51,12 +51,12 @@ class CurrentPulse(Procedure):
     date = Parameter('Date Time', default='now')
     temperature = FloatParameter("Temperature", units="K")
     field = FloatParameter("Magnetic Field", units="Oe")
-    pulse_ip = IntegerParameter("Switch Column for I+ Pulse", default=4)
-    pulse_im = IntegerParameter("Switch Column for I- Pulse", default=5)
-    meas_ip = IntegerParameter("Switch Column for I+ Measurement", default=4)
-    meas_im = IntegerParameter("Switch Column for I- Measurement", default=5)
-    meas_vp = IntegerParameter("Switch Column for V+ Measurement", default=6)
-    meas_vm = IntegerParameter("Switch Column for V- Measurement", default=2)
+    pulse_ip = IntegerParameter("Switch Column for I+ Pulse", default=1)
+    pulse_im = IntegerParameter("Switch Column for I- Pulse", default=4)
+    meas_ip = IntegerParameter("Switch Column for I+ Measurement", default=1)
+    meas_im = IntegerParameter("Switch Column for I- Measurement", default=4)
+    meas_vp = IntegerParameter("Switch Column for V+ Measurement", default=2)
+    meas_vm = IntegerParameter("Switch Column for V- Measurement", default=6)
 
 
     DATA_COLUMNS = ["Time", "Temperature", "B Field", "Pulse Current",
@@ -209,7 +209,8 @@ def main():
     window.show()
     sys.exit(app.exec_())
 
-    directory = r'C:\Users\maglab\Documents\Python Scripts\data\MNN\76_77\Current Pulse\2_17_2023\try1'
+    #directory = r'C:\Users\maglab\Documents\Python Scripts\data\MNN\76_77\Current Pulse\2_17_2023\try1'
+    directory= r'C:\Users\maglab\Documents\Python Scripts\data\MNN\76_77\Current Pulse\4_28_2023\try_1'
     os.chdir(directory)
     data_filename = 'funfunfun.csv'
 

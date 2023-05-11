@@ -53,9 +53,9 @@ class CurrentPulse(Procedure):
     temperature = FloatParameter("Temperature", units="K")
     field = FloatParameter("Magnetic Field", units="Oe")
     meas_ip = IntegerParameter("Switch Column for I+ Measurement", default=4)
-    meas_im = IntegerParameter("Switch Column for I- Measurement", default=7)
-    meas_vp = IntegerParameter("Switch Column for V+ Measurement", default=2)
-    meas_vm = IntegerParameter("Switch Column for V- Measurement", default=5)
+    meas_im = IntegerParameter("Switch Column for I- Measurement", default=8)
+    meas_vp = IntegerParameter("Switch Column for V+ Measurement", default=3)
+    meas_vm = IntegerParameter("Switch Column for V- Measurement", default=1)
 
 
     DATA_COLUMNS = ["Time", "Temperature", "B Field", "Pulse Num", "Current",

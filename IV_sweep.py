@@ -91,7 +91,7 @@ class IVSweep(Procedure):
 
         # Edit here to switch between field sweep and angular sweep
         self.field_to_meas = np.concatenate((fields_pos, fields_neg)) # for field sweep
-        self.field_to_meas = [self.start_field] # for angl sweep
+        #self.field_to_meas = [self.start_field] # for angl sweep
         #self.field_to_meas = fields_neg
         #print(self.field_to_meas)
         sleep(0.1)
@@ -220,9 +220,9 @@ def main():
 
     # Start editing
     directory = (r'C:\Users\maglab\Documents\Python Scripts\data\BPBO'
-                 r'\B031\230320')
+                 r'\B031\230322\test')
     os.chdir(directory)
-    data_filename = 'IVsweeps_1mA_3K_0T_B031_0.csv'
+    data_filename = 'IVsweeps_800uA_300K_10K_0T_B031_0.csv'
 
 
     '''
@@ -234,24 +234,24 @@ def main():
 
     procedure.iterations = 1 # This is always 1
     procedure.angle = 90. # Angle, deg, of the sample mount
-    procedure.max_current = 1.5e-4 # Amps
-    procedure.numberpoints = 1448 # number of currents in IV sweep
+    procedure.max_current = 150.e-6 # Amps
+    procedure.numberpoints = 150 # number of currents in IV sweep
     procedure.num_IV = 2 # Number of IV sweeps at each point
-    procedure.start_temp = 3. # K
-    procedure.end_temp = 3. # K
+    procedure.start_temp = 100 # K
+    procedure.end_temp = 100 # K
     procedure.temp_points = 1 # in Temp sweep
-    procedure.temp_ramp = 3. # K/min ramp rate
-    procedure.start_field = 000000. # Oe
-    procedure.end_field = 00000. # Oe
+    procedure.temp_ramp = 15. # K/min ramp rate
+    procedure.start_field = 00. # Oe
+    procedure.end_field = 00. # Oe
     procedure.field_points = 0 # in Temp sweep
     procedure.field_ramp = 60. # K/min ramp rate
     procedure.break_fields = False # Warm between positive and neg fields
     procedure.temporfield = 'Temp' # Change Temp or Field. Capitilize T/F
     procedure.sweep_type = 'list' # 'linear' for linear sweep, 'list' for custom
-    procedure.i_plus = 1 # I+ switch pin
-    procedure.i_minus = 5 # I- switch pin
-    procedure.v_plus = 3 # V+ switch pin
-    procedure.v_minus = 4 # I- switch pin
+    procedure.i_plus = 1 # I+ switch pin (4)
+    procedure.i_minus = 8 # I- switch pin (8)
+    procedure.v_plus = 1 # V+ switch pin (3)
+    procedure.v_minus = 8 # I- switch pin (1)
     # Stop editing
 
     procedure.delay = 1.e-1

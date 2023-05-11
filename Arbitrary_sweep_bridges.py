@@ -31,20 +31,21 @@ import ngcmeas.switch_matrix as sm
 import MultiVu_talk_ngc as mv
 from PythonControl.parse_inputs import inputs
 
+
+# Sepcific host and port for UW-Madison PPMS
 host = "128.104.184.130"
 port = 5000
 
 
 class TransportMeas(Procedure):
+    """
+    This class allows either a Hall or Temp sweep to be performed, and it
+    integrates with the ManagedWindow gui. The startup and execute methods
+    are run by PyMeausre, and are what controls the exeperiment procedure.
+    """
 
-    #def __init__(self):
-        #self.host = host
-        #self.port = port
-        #self.meastype = meastype
-        #self.tempset = tempset
-        #self.maxb = maxb
-        #super().__init__()
 
+    # Experiment parameters for the sweeps
     iterations = IntegerParameter('Measurement Number', default=1)
     high_current = FloatParameter('Max Current', units='A', default=1.e-6)
     delta = FloatParameter('Delta', units='s', default=1.e-3)
@@ -58,7 +59,7 @@ class TransportMeas(Procedure):
     tempset = FloatParameter('Temperature Set Point', units='K', default=300.)
     tempramp = FloatParameter('Temperature Ramp Rate', units='K/min', default=3.)
     maxfield = FloatParameter('Maximum Field', units='Oe', default=0.)
-    fieldramp = FloatParameter('Magnetic Field Ramp Rate', units='Oe/min', default=100.)
+    fieldramp = FloatParameter('Magnetic Field Ramp Rate', units='Oe/min', default=60.)
     hysteresis = BooleanParameter('Do we expect a hysteresis in B', default = False)
     pinconfig = Parameter('Pin Configuration', default='2bridge')
 
@@ -114,13 +115,13 @@ class TransportMeas(Procedure):
         if config == 'Hall22':
             self.switch.clos_Hall22()
         if config == 'c1': 
-            self.switch.clos_custom(2, 6, 4, 3)
+            self.switch.clos_custom(5, 6, 4, 3)
         if config == 'c2': 
-            self.switch.clos_custom(2, 6, 1, 4)
+            self.switch.clos_custom(5, 6, 9, 8)
         if config == 'c3':
-            self.switch.clos_custom(2, 6, 5, 9)
+            self.switch.clos_custom(5, 6, 9, 4)
         if config == 'c4':
-            self.switch.clos_custom(2, 6, 9, 8)
+            self.switch.clos_custom(5, 6, 8, 3)
 
 
         sleep(0.36)
@@ -417,7 +418,7 @@ class MainWindow(ManagedWindow):
             inputs_in_scrollarea = True)#,
             #sequence_file="gui_sequencer_example_sequence.txt"
         #)
-        self.setWindowTitle('Arbitrary Sweep')
+        self.setWindowTitle('Arbitrary Sweep Bridges')
 
     def queue(self, procedure=None):
         directory = self.directory

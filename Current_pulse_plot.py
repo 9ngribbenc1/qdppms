@@ -12,7 +12,7 @@ import glob
 #directory1 = (r'C:\Users\maglab\Documents\Python Scripts\data'
 #               r'\MNN\76_77\Current Pulse\10um device\10000Oe 0mA to 90mA Meas 100uA')
 directory1 = (r'C:\Users\maglab\Documents\Python Scripts\data'
-               r'\MNN\76_77\Current Pulse\10um device 2\try1')
+               r'\MNN\76_77\Current Pulse\4_28_2023\try_1')
 #directory1 = (r'C:\Users\maglab\Documents\Python Scripts\data'
 #               r'\MNN\76_77\Current Pulse\10um device\10000Oe -50mA to 50mA')
 os.chdir(directory1)
@@ -34,6 +34,6 @@ for fname in files:
 plt.plot(x, y, 'bo')
 plt.xlabel("Pulse Current (A)")
 plt.ylabel("Meas Volts (V)")
-plt.ylim(-2.55E-5,1.55E-5)
+#plt.ylim(-2.55E-5,1.55E-5)
 plt.tight_layout()
 plt.show()
