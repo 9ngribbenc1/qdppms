@@ -59,7 +59,7 @@ class TransportMeas(Procedure):
     tempset = FloatParameter('Temperature Set Point', units='K', default=300.)
     tempramp = FloatParameter('Temperature Ramp Rate', units='K/min', default=3.)
     maxfield = FloatParameter('Maximum Field', units='Oe', default=0.)
-    fieldramp = FloatParameter('Magnetic Field Ramp Rate', units='Oe/min', default=60.)
+    fieldramp = FloatParameter('Magnetic Field Ramp Rate', units='Oe/sec', default=60.)
     hysteresis = BooleanParameter('Do we expect a hysteresis in B', default = False)
     pinconfig = Parameter('Pin Configuration', default='2bridge')
 

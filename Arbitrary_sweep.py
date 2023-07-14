@@ -3,7 +3,7 @@
 # directly, while the cryostat is controlled through MultiVu via QD scripts
 # in the PythonControl library, and my wrapper MultiVu_talk_ngc. This script
 # allows an arbitrary number of sweeps to be run one after the other and
-# and parameters for each sweep to be selected customly. This allows a high 
+# and parameters for each sweep to be selected customly. This allows a high
 # degree of automation when using custom pin configurations with the PPMS.
 
 
@@ -46,7 +46,7 @@ class TransportMeas(Procedure):
     integrates with the ManagedWindow gui. The startup and execute methods
     are run by PyMeausre, and are what controls the exeperiment procedure.
     """
-    
+
     # Experiment parameters for the sweeps.
     iterations = IntegerParameter('Measurement Number', default=1)
     high_current = FloatParameter('Max Current', units='A', default=1.e-6)
@@ -61,14 +61,14 @@ class TransportMeas(Procedure):
     tempset = FloatParameter('Temperature Set Point', units='K', default=300.)
     tempramp = FloatParameter('Temperature Ramp Rate', units='K/min', default=3.)
     maxfield = FloatParameter('Maximum Field', units='Oe', default=0.)
-    fieldramp = FloatParameter('Magnetic Field Ramp Rate', units='Oe/min', default=60.)
+    fieldramp = FloatParameter('Magnetic Field Ramp Rate', units='Oe/sec', default=60.)
     hysteresis = BooleanParameter('Do we expect a hysteresis in B', default = False)
     pinconfig = Parameter('Pin Configuration', default='2vdP')
 
     #DATA_COLUMNS = ['Time', 'Temperature', '\g(m)\-(0)H', 'R vdp 1', \
     #                'R vdp 2', 'R Hall 1', 'R Hall 2'] # Had to have something
-                                                       # here with no logic in order 
-                                                       # for MainWindow def__init__ 
+                                                       # here with no logic in order
+                                                       # for MainWindow def__init__
                                                        # line to work
 
     DATA_COLUMNS = ['Time', 'Temperature', '\g(m)\-(0)H', 'R vdp 1', \
@@ -119,9 +119,9 @@ class TransportMeas(Procedure):
             self.switch.clos_Hall12()
         if config == 'Hall22':
             self.switch.clos_Hall22()
-        if config == 'c1': 
+        if config == 'c1':
             self.switch.clos_custom(2, 6, 4, 3)
-        if config == 'c2': 
+        if config == 'c2':
             self.switch.clos_custom(2, 6, 1, 4)
         if config == 'c3':
             self.switch.clos_custom(2, 6, 5, 9)
@@ -150,8 +150,8 @@ class TransportMeas(Procedure):
         self.switch = sm.Keithley7001(KE7001adapter, "SwitchMatrix")
         print('instruments mapped')
         self.currentsource.reset()
-        self.currentsource.arm_preloop_delta(self.high_current, self.delta, 
-                                             self.swpct1, self.swpct2, 
+        self.currentsource.arm_preloop_delta(self.high_current, self.delta,
+                                             self.swpct1, self.swpct2,
                                              self.swpct3, self.nplc, self.rvng,
                                              self.swpct1)
         #self.currentsource.arm_preloop_delta(self.high_current, delta, swpct1, \
@@ -208,7 +208,7 @@ class TransportMeas(Procedure):
 
                 done = False
                 while not done: # wait until at max neg field
-                    done =  bfield[1] == self.stable_field 
+                    done =  bfield[1] == self.stable_field
 
 
             print("About to set field")
@@ -234,7 +234,7 @@ class TransportMeas(Procedure):
                 print(relevant)
                 bfld = relevant[0]
 
-                done = relevant[1] == self.stable_relevant 
+                done = relevant[1] == self.stable_relevant
 
                 print(relevant[1], done)
 
@@ -249,7 +249,7 @@ class TransportMeas(Procedure):
                 print(relevant)
                 bfld = relevant[0]
 
-                done = relevant[1] == self.stable_relevant 
+                done = relevant[1] == self.stable_relevant
 
                 print(relevant[1], done)
 
@@ -257,7 +257,7 @@ class TransportMeas(Procedure):
             print('About to set field to zero.')
             mv.set_field(host, port, 0.0, self.fieldramp)
             sleep(1.8)
-        
+
             done = False
 
             while not done: # Run the last leg of the Hall sweep
@@ -267,7 +267,7 @@ class TransportMeas(Procedure):
                 print(relevant)
                 bfld = relevant[0]
 
-                done = relevant[1] == self.stable_relevant 
+                done = relevant[1] == self.stable_relevant
 
                 print(relevant[1], done)
 
@@ -287,7 +287,7 @@ class TransportMeas(Procedure):
                 print(relevant)
                 bfld = relevant[0]
 
-                done = relevant[1] == self.stable_relevant 
+                done = relevant[1] == self.stable_relevant
 
                 print(relevant[1], done)
 
@@ -331,7 +331,7 @@ class TransportMeas(Procedure):
         if config == 'Hall22':
             self.switch.clos_Hall22()
 
-        # These are for bridges or other configurations that do not use van 
+        # These are for bridges or other configurations that do not use van
         # der Pauw configurations.
         if config == 'cust1':
             self.switch.clos_custom(1, 2, 3, 9) #5, 1, 6, 2
@@ -406,7 +406,7 @@ class TransportMeas(Procedure):
                 'R Hall 12': ress[6], \
                 'R Hall 22': ress[7], \
                 })
-     
+
         if self.pinconfig == '2bridge':
             DATA_COLUMNS = ['Time', 'Temperature', '\g(m)\-(0)H', 'R bridge 1', \
                             'R bridge 2']
@@ -419,7 +419,7 @@ class TransportMeas(Procedure):
                 'R long 2': ress[2], \
                 'R hall 2': ress[3], \
                 })
- 
+
 
         sleep(0.01)
         '''
@@ -562,7 +562,7 @@ def main():
     os.chdir(directory)
     data_filename = 'rho_v_B_350K_5T_NS035g_1.csv'
 
-    
+
     procedure = HallSweep(50000)
 
     procedure.iterations = 1

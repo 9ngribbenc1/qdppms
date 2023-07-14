@@ -91,7 +91,7 @@ def set_temp(host, port, temp, rate):
     reply = sock.recv(128).decode('utf-8')
     #print('first', reply)
 
-    #time.sleep(0.0)
+    #time.sleep(1.0)
     # Send Temperature Set command
     string = 'TEMP ' + str(temp) + ', ' + str(rate) + ', 0\r'
     print(string)
@@ -174,7 +174,7 @@ def main():
     #print(query_field(host, port))
 
 
-    set_temp(host, port, 300.1, 3.5)
+    set_temp(host, port, 10.1, 3.5)
     #time.sleep(0.013)   # min wait time to not disconnect telnet port.
     #time.sleep(0.3)
     set_field(host, port, 00.0, 10.0)
