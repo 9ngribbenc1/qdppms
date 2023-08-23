@@ -65,8 +65,8 @@ class TransportMeas(Procedure):
 
     #DATA_COLUMNS = ['Time', 'Temperature', '\g(m)\-(0)H', 'R vdp 1', \
     #                'R vdp 2', 'R Hall 1', 'R Hall 2'] # Had to have something
-    #                                                   # here with no logic in order 
-                                                       # for MainWindow def__init__ 
+    #                                                   # here with no logic in order
+                                                       # for MainWindow def__init__
                                                        # line to work
 
     #DATA_COLUMNS = ['Time', 'Temperature', '\g(m)\-(0)H', 'R vdp 1', \
@@ -74,7 +74,7 @@ class TransportMeas(Procedure):
     #                'R vdp 22', 'R Hall 12', 'R Hall 22']
 
     DATA_COLUMNS = ['Time', 'Temperature', '\g(m)\-(0)H', 'R vdp 1', \
-                   'R bridge 2', 'R long 2', 'R hall 2']
+                   'R bridge 2']
 
 
 
@@ -114,10 +114,10 @@ class TransportMeas(Procedure):
             self.switch.clos_Hall12()
         if config == 'Hall22':
             self.switch.clos_Hall22()
-        if config == 'c1': 
-            self.switch.clos_custom(5, 6, 4, 3)
-        if config == 'c2': 
-            self.switch.clos_custom(5, 6, 9, 8)
+        if config == 'c1':
+            self.switch.clos_custom(1, 5, 1, 5)
+        if config == 'c2':
+            self.switch.clos_custom(1, 5, 1, 5)
         if config == 'c3':
             self.switch.clos_custom(5, 6, 9, 4)
         if config == 'c4':
@@ -140,8 +140,8 @@ class TransportMeas(Procedure):
         self.switch = sm.Keithley7001(KE7001adapter, "SwitchMatrix")
         print('instruments mapped')
         self.currentsource.reset()
-        self.currentsource.arm_preloop_delta(self.high_current, self.delta, 
-                                             self.swpct1, self.swpct2, 
+        self.currentsource.arm_preloop_delta(self.high_current, self.delta,
+                                             self.swpct1, self.swpct2,
                                              self.swpct3, self.nplc, self.rvng,
                                              self.swpct1)
         #self.currentsource.arm_preloop_delta(self.high_current, delta, swpct1, \
@@ -160,15 +160,15 @@ class TransportMeas(Procedure):
     def execute(self):
 
         #self.maxb = 100000.
-        self.switch.set_pins(1,2,4,3) #1,3,4,2 Jieun wiring; 1243 Neil wiring
-        self.switch.set_pins2(5,6,8,9) #1,3,4,2 # 7 -> 9 b/c 7 is bad at SM
+        self.switch.set_pins(1,5,1,5) #1,3,4,2 Jieun wiring; 1243 Neil wiring
+        self.switch.set_pins2(1,5,1,5) #1,3,4,2 # 7 -> 9 b/c 7 is bad at SM
         if self.pinconfig == '1vdP':
              configs = ['vdp1', 'vdp2', 'Hall1', 'Hall2']
         if self.pinconfig == '2vdP':
             configs = ['vdp1', 'vdp2', 'Hall1', 'Hall2', \
                        'vdp12', 'vdp22', 'Hall12', 'Hall22']
         if self.pinconfig == '2bridge':
-            configs = ['c1', 'c2', 'c3', 'c4']
+            configs = ['c1', 'c2']#, 'c3', 'c4']
         ress = []
         ts = []
         bs = []
@@ -198,7 +198,7 @@ class TransportMeas(Procedure):
 
                 done = False
                 while not done: # wait until at max neg field
-                    done =  bfield[1] == self.stable_field 
+                    done =  bfield[1] == self.stable_field
 
 
             print("About to set field")
@@ -224,7 +224,7 @@ class TransportMeas(Procedure):
                 print(relevant)
                 bfld = relevant[0]
 
-                done = relevant[1] == self.stable_relevant 
+                done = relevant[1] == self.stable_relevant
 
                 print(relevant[1], done)
 
@@ -239,7 +239,7 @@ class TransportMeas(Procedure):
                 print(relevant)
                 bfld = relevant[0]
 
-                done = relevant[1] == self.stable_relevant 
+                done = relevant[1] == self.stable_relevant
 
                 print(relevant[1], done)
 
@@ -247,7 +247,7 @@ class TransportMeas(Procedure):
             print('About to set field to zero.')
             mv.set_field(host, port, 0.0, self.fieldramp)
             sleep(1.8)
-        
+
             done = False
 
             while not done: # Run the last leg of the Hall sweep
@@ -257,7 +257,7 @@ class TransportMeas(Procedure):
                 print(relevant)
                 bfld = relevant[0]
 
-                done = relevant[1] == self.stable_relevant 
+                done = relevant[1] == self.stable_relevant
 
                 print(relevant[1], done)
 
@@ -277,7 +277,7 @@ class TransportMeas(Procedure):
                 print(relevant)
                 bfld = relevant[0]
 
-                done = relevant[1] == self.stable_relevant 
+                done = relevant[1] == self.stable_relevant
 
                 print(relevant[1], done)
 
@@ -348,7 +348,7 @@ class TransportMeas(Procedure):
                 'R Hall 12': ress[6], \
                 'R Hall 22': ress[7], \
                 })
-     
+
         if self.pinconfig == '2bridge':
             DATA_COLUMNS = ['Time', 'Temperature', '\g(m)\-(0)H', 'R bridge 1', \
                             'R bridge 2']
@@ -358,10 +358,10 @@ class TransportMeas(Procedure):
                 '\g(m)\-(0)H': bfield[0], \
                 'R vdp 1': ress[0], \
                 'R bridge 2': ress[1], \
-                'R long 2': ress[2], \
-                'R hall 2': ress[3], \
+                #'R long 2': ress[2], \
+                #'R hall 2': ress[3], \
                 })
- 
+
 
         sleep(0.01)
         '''
@@ -504,7 +504,7 @@ def main():
     os.chdir(directory)
     data_filename = 'rho_v_B_350K_5T_NS035g_1.csv'
 
-    
+
     procedure = HallSweep(50000)
 
     procedure.iterations = 1

@@ -1,7 +1,7 @@
-# This script runs a Hall sweep using a QD Dynacool PPMS cryostat
-# and Keithley electronics. The Keithleys are controlled directly,
-# while the cryostat is controlled through MultiVu via QD scripts
-# in the PythonControl library.
+"""This script runs a Hall sweep using a QD Dynacool PPMS cryostat
+and Keithley electronics. The Keithleys are controlled directly,
+while the cryostat is controlled through MultiVu via QD scripts
+in the PythonControl library."""
 
 
 import numpy as np
@@ -10,10 +10,12 @@ import pandas as pd
 import os
 from time import sleep, time
 from datetime import datetime
+
 from pymeasure.display import plotter
 from pymeasure.adapters import VISAAdapter
 from pymeasure.experiment import Procedure, Results, Worker
 from pymeasure.experiment import IntegerParameter, FloatParameter, Parameter
+
 from Hall_sweep import HallSweep
 import ngcmeas.current_voltage as cv
 import ngcmeas.switch_matrix as sm
@@ -79,9 +81,9 @@ class TempSweep(Procedure):
         if config == 'c2':
             self.switch.clos_custom2()
         if config == 'cust1':
-            self.switch.clos_custom(6, 1, 4, 2) #5, 1, 6, 2
+            self.switch.clos_custom(3, 2, 6, 4) #5, 1, 6, 2
         if config == 'cust2':
-            self.switch.clos_custom(6, 1, 5, 2)
+            self.switch.clos_custom(3, 2, 1, 6)
         if config == 'cust3':
             self.switch.clos_custom(1, 2, 8, 4) #5, 1, 6, 2
         if config == 'cust4':
@@ -186,7 +188,7 @@ class TempSweep(Procedure):
             })
         sleep(0.01)
 
-        
+
         # comment out goes here for switching configs
         print('done emitting')
 
@@ -357,16 +359,16 @@ def main():
     #plt.show()
 
     # Edit below here
-    directory = (r'C:\Users\maglab\Documents\Python Scripts\data\IrO'
-                 r'\IO158AMR') 
+    directory = (r'C:\Users\maglab\Documents\Python Scripts\data\MGN'
+                 r'/MGN328')
 
     os.chdir(directory)
-    data_filename = 'rho_v_phi_300K_1kOe_IrO_0.csv'
+    data_filename = 'rho_v_phi_400K_100kOe_MGN328_45deg_test.csv'
     #data_filename = 'rho_v_T_400K_300K_10T_45deg_MGN285_0.csv'
 
-    angle = 320.  
+    angle = 0.
     #print('angle ', angle)
-    setpoint = 300.0 # K
+    setpoint = 400.0 # K
     ramprate = 3.0 #K/min
     procedure = TempSweep(host, port, setpoint, ramprate, angle)
 

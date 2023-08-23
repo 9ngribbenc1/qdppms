@@ -15,7 +15,7 @@ from pymeasure.adapters import VISAAdapter
 from pymeasure.experiment import Procedure, Results, Worker
 from pymeasure.experiment import IntegerParameter, FloatParameter, Parameter
 from pymeasure.experiment import BooleanParameter
-import ngcmeas.current_voltage as cv
+import ngcmeas.current_voltage_diode as cv
 import ngcmeas.switch_matrix as sm
 import MultiVu_talk_ngc as mv
 from PythonControl.parse_inputs import inputs
@@ -43,6 +43,7 @@ class IVSweep(Procedure):
     max_current = FloatParameter('Max Current', units='A', default=1.e-6)
     delay = FloatParameter('Delay', units='s', default=100.e-3)
     nplc = IntegerParameter('Num Power Line Cycles', default=3) #not used?
+    diode = BooleanParameter('Suoerconducting diode effect? Use List type for sweep', default=False)
     date = Parameter('Date Time', default='')
     numberpoints = IntegerParameter('IV points 0 to maxI', default=10)
     num_IV = IntegerParameter('Number of IV sweeps to take at each point', default=1)
@@ -71,9 +72,18 @@ class IVSweep(Procedure):
         self.switch = sm.Keithley7001(KE7001adapter, "SwitchMatrix")
         print('instruments mapped')
         self.currentsource.reset()
-        self.currentsource.current_sweep_setup(self.max_current, \
-                self.numberpoints, self.sweep_type, self.delay, \
-                self.nplc, self.pulse_width)
+        # if self.diode == False:
+        #     self.currentsource.current_sweep_setup(self.max_current, \
+        #             self.numberpoints, self.sweep_type, self.delay, \
+        #             self.nplc, self.pulse_width)
+        # if self.diode == True:
+        #     self.crit_curr = 500 # critical current uA
+        #     self.crit_numpoints = 100 # Number of points between Pos and Neg critical current
+        #     self.out_numpoints = 10 # Number of points between critical current and max current
+        #     self.crit_curr_window = 100 # critical current uA
+        #     self.currentsource.diode_current_sweep_setup(self.max_current, \
+        #             self.crit_curr, self.crit_curr_window, self.crit_numpoints, self.out_numpoints, \
+        #             self.sweeptype, self.delay, self.nplc, self.pulse_width)
 
         self.starttime = time()
         print('Done Startup')
@@ -119,7 +129,7 @@ class IVSweep(Procedure):
 
 
     def execute(self):
-
+        print("In Execute")
         self.stable_field = r'"Holding (Driven)"'
         self.stable_temp = r'"Stable"'
 
@@ -186,6 +196,33 @@ class IVSweep(Procedure):
             b = mv.query_field(self.host, self.port)
             t = mv.query_temp(self.host, self.port)
 
+            if self.diode == False:
+                self.currentsource.current_sweep_setup(self.max_current, \
+                        self.numberpoints, self.sweep_type, self.delay, \
+                        self.nplc, self.pulse_width)
+
+            if self.diode == True:
+                print('Finding critical current...')
+                self.pts_find_IC = 150
+                self.sweep_type_IC='lin'
+                self.currentsource.current_sweep_setup(self.max_current, \
+                        self.pts_find_IC, self.sweep_type_IC, self.delay, \
+                        self.nplc, self.pulse_width)
+
+                self.currentsource.current_sweep_inloop()
+                self.crit_curr=self.currentsource.find_IC()
+                print(f'Critical Current:{self.crit_curr}')
+                print('Setting up fine sweep')
+                self.sweeptype='list'
+
+                self.crit_numpoints = 350 # Number of points between Pos and Neg critical current
+                self.out_numpoints = 20 # Number of points between critical current and max current
+                self.crit_curr_window = 15.e-6 # critical current uA
+
+                self.currentsource.diode_current_sweep_setup(self.max_current, \
+                        self.crit_curr, self.crit_curr_window, self.crit_numpoints, self.out_numpoints, \
+                        self.sweeptype, self.delay, self.nplc, self.pulse_width)
+
             for i in range(self.num_IV):
                 measstart = time()
                 self.currentsource.current_sweep_inloop()
@@ -219,9 +256,9 @@ def main():
     now = datetime.now()
 
     # Start editing
-    directory = (r'C:\Users\maglab\Documents\Python Scripts\data\MNN\064\DC SOT\Day 2\300K_Hz_dev1_low_field')
+    directory = (r'C:\Users\maglab\Documents\Python Scripts\data\BPBO\B031\230822\IV sweeps\Field')
     os.chdir(directory)
-    data_filename = 'IVsweeps_7mA_150K_2000Oe_0Oe_064_0.csv'
+    data_filename = 'IVsweeps_500uA_2K_0T_0.5T_B031_0.csv'
 
 
     '''
@@ -233,31 +270,32 @@ def main():
 
     procedure.iterations = 1 # This is always 1
     procedure.angle = 0. # Angle, deg, of the sample mount
-    procedure.max_current =7.e-3 # Amps
+    procedure.max_current = 5.e-4 # Amps
     procedure.numberpoints = 300 # number of currents in IV sweep
     procedure.num_IV = 1 # Number of IV sweeps at each point
-    procedure.start_temp = 150 # K
-    procedure.end_temp = 150 # K
+    procedure.start_temp = 2 # K
+    procedure.end_temp = 2 # K
     procedure.temp_points = 1 # in Temp sweep
-    procedure.temp_ramp = 4. # K/min ramp rate
+    procedure.temp_ramp = 1. # K/min ramp rate
     procedure.start_field = 0. # Oe
-    procedure.end_field = 300. # Oe
-    procedure.field_points = 11 # in Temp sweep
-    procedure.field_ramp = 60. # K/min ramp rate
+    procedure.end_field = 5000. # Oe
+    procedure.field_points = 2 # in Temp sweep
+    procedure.field_ramp = 100. # K/min ramp rate
     procedure.break_fields = False # Warm between positive and neg fields
+    procedure.diode = True
     procedure.temporfield = 'Field' # Change Temp or Field. Capitilize T/F
-    procedure.sweep_type = 'linear' # 'linear' for linear sweep, 'list' for custom
-    procedure.i_plus = 5 # I+ switch pin (1)
-    procedure.i_minus = 8 # I- switch pin (5)
-    procedure.v_plus = 7 # V+ switch pin (3)
-    procedure.v_minus = 6 # V- switch pin (4)
+    procedure.sweep_type = 'list' # 'linear' for linear sweep, 'list' for custom
+    procedure.i_plus = 5 # I+ switch pin (4)
+    procedure.i_minus = 6 # I- switch pin (8)
+    procedure.v_plus = 4 # V+ switch pin (3)
+    procedure.v_minus = 1 # I- switch pin (1)
     # Stop editing
 
     procedure.delay = 1.e-1
     procedure.nplc = 3
     procedure.date = now.strftime("%m/%d/%Y, %H:%M:%S")
 
-    procedure.pulse_width = 11000e-6
+    procedure.pulse_width = 1100e-6
     procedure.rvng = 1.e1
 
     results = Results(procedure, data_filename)

@@ -219,10 +219,10 @@ def main():
     now = datetime.now()
 
     # Start editing
-    directory = (r'C:\Users\maglab\Documents\Python Scripts\data\IrO'
-                 r'\IO124\test3')
+    directory = (r'C:\Users\maglab\Documents\Python Scripts\data\BPBO'
+                 r'\B031\test')
     os.chdir(directory)
-    data_filename = 'IVsweeps_800uA_300K_10K_0T_B031_0.csv'
+    data_filename = 'test.csv'
 
 
     '''
@@ -234,31 +234,31 @@ def main():
 
     procedure.iterations = 1 # This is always 1
     procedure.angle = 0. # Angle, deg, of the sample mount
-    procedure.max_current = 9.e-3 # Amps
-    procedure.numberpoints = 433 # number of currents in IV sweep
-    procedure.num_IV = 4 # Number of IV sweeps at each point
-    procedure.start_temp = 300 # K
-    procedure.end_temp = 300 # K
+    procedure.max_current = 5.e-4 # Amps
+    procedure.numberpoints = 300 # number of currents in IV sweep
+    procedure.num_IV = 1 # Number of IV sweeps at each point
+    procedure.start_temp = 2 # K
+    procedure.end_temp = 2 # K
     procedure.temp_points = 1 # in Temp sweep
-    procedure.temp_ramp = 15. # K/min ramp rate
-    procedure.start_field = 1500. # Oe
-    procedure.end_field = 1000. # Oe
-    procedure.field_points = 29 # in Temp sweep
+    procedure.temp_ramp = 1 # K/min ramp rate
+    procedure.start_field = 0. # Oe
+    procedure.end_field = 0. # Oe
+    procedure.field_points = 1 # in Temp sweep
     procedure.field_ramp = 100. # K/min ramp rate
     procedure.break_fields = False # Warm between positive and neg fields
-    procedure.temporfield = 'Field' # Change Temp or Field. Capitilize T/F
+    procedure.temporfield = 'Temp' # Change Temp or Field. Capitilize T/F
     procedure.sweep_type = 'list' # 'linear' for linear sweep, 'list' for custom
     procedure.i_plus = 1 # I+ switch pin (4)
-    procedure.i_minus = 4 # I- switch pin (8)
-    procedure.v_plus = 2 # V+ switch pin (3)
-    procedure.v_minus = 3 # I- switch pin (1)
+    procedure.i_minus = 5 # I- switch pin (8)
+    procedure.v_plus = 8 # V+ switch pin (3)
+    procedure.v_minus = 4 # I- switch pin (1)
     # Stop editing
 
     procedure.delay = 1.e-1
     procedure.nplc = 3
     procedure.date = now.strftime("%m/%d/%Y, %H:%M:%S")
 
-    procedure.pulse_width = 11000e-6
+    procedure.pulse_width = 1100e-6
     procedure.rvng = 1.e1
 
     results = Results(procedure, data_filename)
